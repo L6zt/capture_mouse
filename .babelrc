@@ -1,0 +1,8 @@
+{
+  "presets": [["@babel/env", {
+    "useBuiltIns": "entry",
+    "targets": "> 0.25%, not dead",
+    "loose": true
+  }]],
+  "plugins": []
+}
