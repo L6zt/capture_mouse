@@ -19,6 +19,9 @@ module.exports = {
 		  test: /\.js$/,
 		  exclude: /node_modules/,
 		  use: ['babel-loader', 'eslint-loader'],
+	  }, {
+		  test: /\.(css|scss)$/,
+		  use: ['style-loader', 'css-loader', 'sass-loader']
 	  }],
   },
   devtool: 'source-map',
