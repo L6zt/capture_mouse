@@ -5,6 +5,54 @@
     height: 800px;
     margin: 20px 0 0 20px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    span.control-content-lc {
+      position: absolute;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 1px solid #333;
+      box-sizing: border-box;
+      margin: -5px 0 0 -5px;
+      &.jc-capture-lt {
+        left: 0;
+        top: 0;
+        cursor: se-resize;
+      }
+      &.jc-capture-rt {
+        left: 100%;
+        top: 0;
+        cursor: sw-resize;
+      }
+      &.jc-capture-lm {
+        left: 0;
+        top: 50%;
+        cursor: e-resize;
+      }
+      &.jc-capture-rm {
+        left: 100%;
+        top: 50%;
+        cursor: w-resize;
+      }
+      &.jc-capture-lb {
+        left: 0;
+        top: 100%;
+        cursor: ne-resize;
+      }
+      &.jc-capture-rb {
+        left: 100%;
+        top: 100%;
+        cursor: nw-resize;
+      }
+      &.jc-capture-tm {
+        left: 50%;
+        top: 100%;
+        cursor: n-resize;
+      }
+      &.jc-capture-bm {
+        left: 50%;
+        top: 0;
+        cursor: s-resize;
+      }
+    }
   }
 }
