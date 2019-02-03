@@ -9,8 +9,9 @@
 *
 */
 import {on, off, once} from './utils/dom';
-import {checkIsPc} from './utils/browser'
-class CaptureMouse {
+import {checkIsPc} from './utils/browser';
+import JcEvent from './common/event'
+class CaptureMouse{
   constructor (elem, options) {
     this.elem = elem;
     this._isPc = this.checkInPc();
@@ -22,6 +23,7 @@ class CaptureMouse {
     this._mvY = 0;
     this._dx = 0;
     this._dy = 0;
+    this.actionEvent = new JcEvent();
     this.init();
   }
   checkInPc () {
@@ -53,6 +55,17 @@ class CaptureMouse {
     this._dy = dy;
     this._mvX = pageX;
     this._mvY = pageY;
+    this.actionEvent.trigger({
+      type: 'state:change',
+      playLoad: {
+        dx,
+        dy,
+        mvX: pageX,
+        mvY: pageY,
+        x: this._x,
+        y: this._y
+      }
+    })
   }
   captureMouseEnd () {
 	  const {elem, captureMouseMove, captureMouseEnd} = this;
@@ -66,6 +79,18 @@ class CaptureMouse {
       type: 'mouseup',
       fn: captureMouseEnd
     });
+  }
+  captureSateChange(fn) {
+    this.actionEvent.on({
+      type: 'state:change',
+      fn
+    });
+  }
+  offCaptureSateChange (fn) {
+    this.actionEvent.off({
+      type: 'state:change',
+      fn
+    })
   }
   init () {
     const {_isPc, elem, captureMouseStart, captureMouseMove, captureMouseEnd} = this;

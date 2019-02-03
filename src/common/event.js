@@ -56,4 +56,5 @@ class JcEvent {
       })
     };
   }
-}
+};
+export default JcEvent
