@@ -7,10 +7,10 @@ let browserEventType = 0;
 const findBrowserEventType = () => {
   // w3c
   if (global.addEventListener) {
-    return 0
+    return 1
   }
   // ie模式
-  return 1
+  return 0
 };
 browserEventType = findBrowserEventType();
 // 获取单个元素
@@ -32,9 +32,10 @@ export const on = ({type, fn, elem}) => {
 // 解除绑定事件
 export const off = ({type, fn, elem}) => {
   if (browserEventType === 1) {
-    elem.removeEventListener(type, fn);
+    elem.removeEventListener(type, fn, false);
+  } else {
+	  elem.detachEvent(`on${type}`, fn);
   }
-  elem.detachEvent(`on${type}`, fn);
 };
 // 绑定一次
 export const once = ({type, fn, elem}) => {
@@ -66,16 +67,17 @@ export const getElemOffsetToPage = (elem) => {
   });
 };
 // 获取元素css样式或设置css样式
-export const sgElemCss = () => {
+export const sgElemCss = function () {
   const elem = arguments[0];
   const arg = arguments[1];
   // 给元素设置 属性
   if (checkIsObject(arg)) {
-  	let inlineStyle = elem.cssText;
+  	let inlineStyle = elem.style.cssText || '';
   	for (let key in arg) {
   		inlineStyle +=`;${key}:${arg[key]}`;
 	  }
-	  elem.cssText = inlineStyle;
+	  console.log(inlineStyle, 'inlineStyle');
+	  elem.style.cssText = inlineStyle;
   } else {
   	if (arg === undefined) {
   		return undefined

@@ -10,13 +10,14 @@
 */
 import {on, off, once} from './utils/dom';
 import {checkIsPc} from './utils/browser';
-import JcEvent from './common/event'
+import JcEvent from './common/event';
+console.log(checkIsPc)
 class CaptureMouse{
   constructor (elem, options) {
     this.elem = elem;
     this._isPc = this.checkInPc();
     this._defaultOptions = {};
-    this.options = Object.assign({}, this._defaultOptions, options);
+    this.options = Object.assign({}, this._defaultOptions, options || {});
     this._x = 0;
     this._y = 0;
     this._mvX = 0;
@@ -24,14 +25,17 @@ class CaptureMouse{
     this._dx = 0;
     this._dy = 0;
     this.actionEvent = new JcEvent();
+	  this.captureMouseStart = this.captureMouseStart.bind(this);
+	  this.captureMouseMove = this.captureMouseMove.bind(this);
+    this.captureMouseEnd = this.captureMouseEnd.bind(this);
     this.init();
   }
   checkInPc () {
-    const {flag} = checkIsPc();
-    return flag
+    const {isPc} = checkIsPc();
+    return isPc
   }
   captureMouseStart (e) {
-	  const {elem, captureMouseStart, captureMouseMove, captureMouseEnd} = this;
+	  const {elem, captureMouseMove, captureMouseEnd} = this;
 	  const {pageX, pageY} = e;
 	  this._x = this._mvX = pageX;
 	  this._y = this._mvY= pageY;
@@ -41,14 +45,17 @@ class CaptureMouse{
 		  fn: captureMouseMove
 	  });
 	  on({
-		  elem,
+		  elem: window,
 		  type: 'mouseup',
 		  fn: captureMouseEnd
 	  });
   }
   captureMouseMove (e) {
+    e.preventDefault();
+    // 其他情况
+    e.stopPropagation();
     const {pageX, pageY} = e;
-    const {_x, _y} = e;
+    const {_x, _y} = this;
     const dx = pageX - _x;
     const dy = pageY - _y;
     this._dx = dx;
@@ -69,13 +76,14 @@ class CaptureMouse{
   }
   captureMouseEnd () {
 	  const {elem, captureMouseMove, captureMouseEnd} = this;
+	  console.log('off --- off');
 	  off({
       elem,
       type: 'mousemove',
       fn: captureMouseMove
     });
 	  off({
-      elem,
+      elem: window,
       type: 'mouseup',
       fn: captureMouseEnd
     });
@@ -93,7 +101,7 @@ class CaptureMouse{
     })
   }
   init () {
-    const {_isPc, elem, captureMouseStart, captureMouseMove, captureMouseEnd} = this;
+    const {_isPc, elem, captureMouseStart} = this;
     if (_isPc) {
       on({
         elem,
@@ -114,4 +122,5 @@ class CaptureMouse{
       })
     }
   }
-}
+};
+export default CaptureMouse

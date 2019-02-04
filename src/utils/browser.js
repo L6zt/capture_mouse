@@ -6,19 +6,19 @@ export const checkIsPc = () => {
   let pcIdV = null;
   browserIds.forEach((pcId) => {
   	const pcIdReg = new RegExp(pcId, 'i');
-  	if (uA.test(pcIdReg)) {
+  	if (pcIdReg.test(uA)) {
   		isPc = true;
   		pcIdV = pcId
-  		return false
-	  }
-	  if (isPc) {
-  		return {
-  			pcIdV,
-			  isPc
-		  }
-	  }
-	  return {
-  		isPc: false
+		  return false
 	  }
   });
+  if (isPc) {
+    return {
+      pcIdV,
+      isPc
+    }
+  }
+  return {
+    isPc: false
+  }
 };

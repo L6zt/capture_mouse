@@ -15,7 +15,7 @@ class JcEvent {
   }
   on ({type, fn}) {
     const {_eventList} = this;
-    if (!hasOwn(_eventList, type)) {
+    if (hasOwn(_eventList, type)) {
       console.warn('绑定的事件名 与基础对象的原型对象有冲突')
     } else {
       let curEventList = _eventList[type];
@@ -28,7 +28,7 @@ class JcEvent {
   }
   off ({type, fn}) {
     const {_eventList} = this;
-    if (!hasOwn(_eventList, type)) {
+    if (hasOwn(_eventList, type)) {
       console.log('不存在 此事件类型 或 此类型和原型对象有冲突')
     } else {
       if (!!fn) {
