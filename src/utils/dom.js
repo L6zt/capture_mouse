@@ -1,4 +1,5 @@
-import {checkIsNumber, checkIsObject} from './checkVarType.js';
+import {checkIsNumber, checkIsObject, checkIsArray} from './checkVarType.js';
+import {trim} from './base.js';
 const global = window;
 const doc = global.document;
 const getComputedStyle = doc.defaultView.getComputedStyle;
@@ -23,6 +24,11 @@ export const getElementS = (selector) => {
 };
 // 绑定事件
 export const on = ({type, fn, elem}) => {
+  if (elem && elem.nodeType === 1) {
+  } else {
+	  console.warn('检查元素 是不是 node节点');
+	  return false
+  }
   if (browserEventType === 1) {
     elem.addEventListener(type, fn, false)
   } else {
@@ -31,6 +37,10 @@ export const on = ({type, fn, elem}) => {
 };
 // 解除绑定事件
 export const off = ({type, fn, elem}) => {
+  if (elem && elem.nodeType === 1) {
+  } else {
+    console.warn('检查元素 是不是 node节点')
+  }
   if (browserEventType === 1) {
     elem.removeEventListener(type, fn, false);
   } else {
@@ -103,29 +113,77 @@ export const setElemAttr = (elem, attrs) => {
 };
 // 获取元素 className
 export const addElemClass = (elem, className) => {
-  let classList = getElemAttr(elem, 'className').join(' ');
-  const classWaitAddList = className.join(' ');
+  let classList = (getElemAttr(elem, 'class') || '').split(/\s{1,}/);
+  const classWaitAddList = className.split(/\s{1,}/);
   let sureClassAddList = '';
   classWaitAddList.forEach(className => {
   	let index = classList.indexOf(className);
   	if (index === -1) {
-  		sureClassAddList += className
+  		sureClassAddList = sureClassAddList + ' ' + className
 	  }
   });
   if(sureClassAddList === '') {
   	return false
   }
-  classList += sureClassAddList;
-  setElemAttr('className', sureClassAddList.join(' '));
+  sureClassAddList = classList.join(' ') + ' ' + sureClassAddList;
+  sureClassAddList = trim(sureClassAddList);
+  setElemAttr(elem, {
+    class: sureClassAddList
+  });
 };
 // 删除元素 className
 export const removeClass = (elem, className) => {
-  let classListStr = getElemAttr(elem, 'className');
+  let classListStr = (getElemAttr(elem, 'class') || '');
   if (classListStr === undefined) {
   	return false
   }
-  let classList = classListStr.join(' ');
-  const classWaitRemoveList = className.join(' ');
+  let classList = classListStr.split(/\s{1,}/);
+  const classWaitRemoveList = className.split(/\s{1,}/);
   classListStr = classList.filter(className => classWaitRemoveList.indexOf(className) !== -1).join(' ');
-  setElemAttr(elem, classListStr);
-}
+  setElemAttr(elem, {
+    class: classListStr
+  })
+};
+export const createdElem = function (elemDesc) {
+  const {
+    tag,
+    classNames,
+	  style,
+	  props,
+	  childs,
+    text
+  } = elemDesc;
+  // 根结点
+  const rootNode = arguments[1] || null;
+  const elem = doc.createElement(tag);
+  if (text) {
+    const textNode = doc.createTextNode(text);
+    if (rootNode) {
+      rootNode.appendChild(textNode)
+    }
+    return elem
+  }
+  if (checkIsObject(elemDesc)) {
+    if (style) {
+      sgElemCss(elem, style);
+    }
+    if (props) {
+      setElemAttr(elem, props)
+    }
+    if (classNames) {
+      addElemClass(elem, classNames)
+    }
+    if (childs) {
+      if (checkIsArray(childs)) {
+        childs.forEach(elemDesc => {
+          createdElem(elemDesc, elem);
+        })
+      }
+    }
+    if(rootNode) {
+      rootNode.appendChild(elem);
+    }
+    return elem
+  }
+  console.warn('元素描述 是否正确')
+};
