@@ -11,7 +11,9 @@
 import {on, off, once} from './utils/dom';
 import {checkIsPc} from './utils/browser';
 import JcEvent from './common/event';
-console.log(checkIsPc)
+const global = window;
+const doc = global.document;
+const body = doc.body;
 class CaptureMouse{
   constructor (elem, options) {
     this.elem = elem;
@@ -28,14 +30,35 @@ class CaptureMouse{
 	  this.captureMouseStart = this.captureMouseStart.bind(this);
 	  this.captureMouseMove = this.captureMouseMove.bind(this);
     this.captureMouseEnd = this.captureMouseEnd.bind(this);
+    this.findMouseLc = this.findMouseLc.bind(this);
     this.init();
   }
   checkInPc () {
     const {isPc} = checkIsPc();
     return isPc
   }
+  findMouseLc (e) {
+	  const {pageX, pageY} = e;
+	  const {_x, _y} = this;
+	  const dx = pageX - _x;
+	  const dy = pageY - _y;
+	  this._dx = dx;
+	  this._dy = dy;
+	  this._mvX = pageX;
+	  this._mvY = pageY;
+	  const playLoad = {
+		  dx,
+		  dy,
+		  mvX: pageX,
+		  mvY: pageY,
+		  x: this._x,
+		  y: this._y
+	  };
+	  return playLoad
+  }
   captureMouseStart (e) {
-	  const {elem, captureMouseMove, captureMouseEnd} = this;
+	  const {captureMouseMove, captureMouseEnd} = this;
+	  const elem = body;
 	  const {pageX, pageY} = e;
 	  this._x = this._mvX = pageX;
 	  this._y = this._mvY= pageY;
@@ -45,59 +68,59 @@ class CaptureMouse{
 		  fn: captureMouseMove
 	  });
 	  on({
-		  elem: window,
+		  elem,
 		  type: 'mouseup',
 		  fn: captureMouseEnd
 	  });
   }
   captureMouseMove (e) {
+    const playLoad = this.findMouseLc(e);
     e.preventDefault();
     // 其他情况
     e.stopPropagation();
-    const {pageX, pageY} = e;
-    const {_x, _y} = this;
-    const dx = pageX - _x;
-    const dy = pageY - _y;
-    this._dx = dx;
-    this._dy = dy;
-    this._mvX = pageX;
-    this._mvY = pageY;
     this.actionEvent.trigger({
       type: 'state:change',
-      playLoad: {
-        dx,
-        dy,
-        mvX: pageX,
-        mvY: pageY,
-        x: this._x,
-        y: this._y
-      }
+      playLoad
     })
   }
-  captureMouseEnd () {
-	  const {elem, captureMouseMove, captureMouseEnd} = this;
-	  console.log('off --- off');
+  captureMouseEnd (e) {
+	  const {captureMouseMove, captureMouseEnd} = this;
+	  const playLoad = this.findMouseLc(e);
+	  const elem = body;
 	  off({
       elem,
       type: 'mousemove',
       fn: captureMouseMove
     });
 	  off({
-      elem: window,
+      elem,
       type: 'mouseup',
       fn: captureMouseEnd
     });
+	  this.actionEvent.trigger({
+      type: 'state:end',
+      playLoad
+    })
   }
-  captureSateChange(fn) {
+  captureStateEnd(fn) {
+    const self = this;
+    this.actionEvent.on({
+      type: 'state:end',
+      fn: fn.bind(self)
+    })
+  }
+  captureStateChange(fn) {
+    const self = this;
     this.actionEvent.on({
       type: 'state:change',
-      fn
-    });
+      fn: fn.bind(self)
+    })
   }
-  offCaptureSateChange (fn) {
+  offCaptureStateChange (fn) {
+    const self = this;
     this.actionEvent.off({
       type: 'state:change',
-      fn
+      fn: fn.bind(self)
     })
   }
   init () {

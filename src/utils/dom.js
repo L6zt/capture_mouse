@@ -70,19 +70,25 @@ export const getElemOffsetToPage = (elem) => {
 export const sgElemCss = function () {
   const elem = arguments[0];
   const arg = arguments[1];
+  const getIsPx = /px$/i;
+  let getPropValue = null;
   // 给元素设置 属性
   if (checkIsObject(arg)) {
   	let inlineStyle = elem.style.cssText || '';
   	for (let key in arg) {
   		inlineStyle +=`;${key}:${arg[key]}`;
 	  }
-	  console.log(inlineStyle, 'inlineStyle');
 	  elem.style.cssText = inlineStyle;
   } else {
   	if (arg === undefined) {
   		return undefined
 	  }
-	  return getComputedStyle(elem, null).getPropertyValue(arg)
+	  getPropValue = getComputedStyle(elem, null).getPropertyValue(arg);
+  	if (getIsPx.test(getPropValue)) {
+  		getPropValue = getPropValue.replace(getIsPx, '');
+  		getPropValue = Number(getPropValue);
+	  }
+	  return getPropValue
   }
 };
 // 获取元素属性

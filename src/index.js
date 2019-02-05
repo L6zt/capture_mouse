@@ -8,7 +8,7 @@ const initSingleItem = () => {
   let left = 0;
   let top = 0;
   console.log(sgElemCss(controlView, 'left'), sgElemCss(controlView, 'right'));
-  captureA.captureSateChange(function (playLoad) {
+  captureA.captureStateChange(function (playLoad) {
 	  const {dx, dy} = playLoad;
 	  let curLeft = left + dx;
 	  let curTop = top + dy;
@@ -17,6 +17,15 @@ const initSingleItem = () => {
 		  top: `${curTop}px`
 	  });
   });
+  captureA.captureStateEnd(function () {
+  	const {_dx, _dy} = this;
+  	left = left + _dx;
+  	top = top + _dy;
+	  sgElemCss(controlView, {
+		  left: `${left}px`,
+		  top: `${top}px`
+	  });
+  })
 }
 const init = () => {
   initSingleItem();
