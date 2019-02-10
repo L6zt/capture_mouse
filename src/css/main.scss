@@ -30,42 +30,42 @@ html, body {
         &.jc-capture-lt {
           left: 0;
           top: 0;
-          cursor: se-resize;
+          cursor: nwse-resize;
         }
         &.jc-capture-rt {
           left: 100%;
           top: 0;
-          cursor: sw-resize;
+          cursor: nesw-resize;
         }
         &.jc-capture-lm {
           left: 0;
           top: 50%;
-          cursor: e-resize;
+          cursor: ew-resize;
         }
         &.jc-capture-rm {
           left: 100%;
           top: 50%;
-          cursor: w-resize;
+          cursor: ew-resize;
         }
         &.jc-capture-lb {
           left: 0;
           top: 100%;
-          cursor: ne-resize;
+          cursor: nesw-resize;
         }
         &.jc-capture-rb {
           left: 100%;
           top: 100%;
-          cursor: nw-resize;
+          cursor: nwse-resize;
         }
         &.jc-capture-tm {
           left: 50%;
           top: 100%;
-          cursor: n-resize;
+          cursor: ns-resize;
         }
         &.jc-capture-bm {
           left: 50%;
           top: 0;
-          cursor: s-resize;
+          cursor: ns-resize;
         }
       }
     }

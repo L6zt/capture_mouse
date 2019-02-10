@@ -51,26 +51,31 @@ const initSingleItem = () => {
   insertControlDot(controlView);
   const elem = getElement('.jc-capture-rb');
   const captureA = new CaptureMouse(elem);
-  let left = 0;
-  let top = 0;
-  console.log(sgElemCss(controlView, 'left'), sgElemCss(controlView, 'right'));
+  let left = sgElemCss(controlView, 'left');
+  let top = sgElemCss(controlView, 'top');
+  let width = sgElemCss(controlView, 'width');
+  let height = sgElemCss(controlView, 'height');
   captureA.captureStateChange(function (playLoad) {
 	  const {dx, dy} = playLoad;
-	  let curLeft = left + dx;
-	  let curTop = top + dy;
-	  sgElemCss(controlView, {
-	  	left: `${curLeft}px`,
-		  top: `${curTop}px`
-	  });
+	  let curWidth = width + dx;
+	  let curHeight = height + dy;
+    if (curWidth < 24) curWidth = 24;
+    if (curHeight < 24) curHeight = 24;
+    sgElemCss(controlView, {
+      width: `${curWidth}px`,
+      height: `${curHeight}px`
+    });
   });
   captureA.captureStateEnd(function () {
   	const {_dx, _dy} = this;
-  	left = left + _dx;
-  	top = top + _dy;
-	  sgElemCss(controlView, {
-		  left: `${left}px`,
-		  top: `${top}px`
-	  });
+    width = width + _dx;
+    height = height + _dy;
+    if (width < 24) width = 24;
+    if (height < 24) height = 24;
+    sgElemCss(controlView, {
+      width: `${width}px`,
+      height: `${height}px`
+    })
   })
 }
 const init = () => {
