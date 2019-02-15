@@ -62,7 +62,8 @@ class CaptureMouse{
 	  const {pageX, pageY} = e;
 	  this._x = this._mvX = pageX;
 	  this._y = this._mvY= pageY;
-	  on({
+    e.stopPropagation();
+    on({
 		  elem,
 		  type: 'mousemove',
 		  fn: captureMouseMove
@@ -87,7 +88,8 @@ class CaptureMouse{
 	  const {captureMouseMove, captureMouseEnd} = this;
 	  const playLoad = this.findMouseLc(e);
 	  const elem = body;
-	  off({
+    // e.stopPropagation();
+    off({
       elem,
       type: 'mousemove',
       fn: captureMouseMove
