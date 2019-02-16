@@ -4,14 +4,6 @@ import {getElement, sgElemCss, createdElem} from './utils/dom';
 const global = window;
 const doc = global.document;
 const insertControlDot = (fartherNone) => {
-  const childNodeStr = '<span class="control-content-lc jc-capture-lt"></span>' +
-            '<span class="control-content-lc jc-capture-lm"></span>' +
-            '<span class="control-content-lc jc-capture-rt"></span>' +
-            '<span class="control-content-lc jc-capture-rm"></span>' +
-            '<span class="control-content-lc jc-capture-lb"></span>' +
-            '<span class="control-content-lc jc-capture-rb"></span>' +
-            '<span class="control-content-lc jc-capture-bm"></span>' +
-            '<span class="control-content-lc jc-capture-tm"></span>';
   const childNodeList = [
     {
       tag: 'span',
@@ -52,6 +44,11 @@ const init= () => {
   const rbElem = getElement('.jc-capture-rb');
   const tmElem = getElement('.jc-capture-bm');
   const bmElem = getElement('.jc-capture-tm');
+  const lmElem = getElement('.jc-capture-lm');
+  const rmElem = getElement('.jc-capture-rm');
+  const rtElem = getElement('.jc-capture-rt');
+  const ltElem = getElement('.jc-capture-lt');
+  const lbElem = getElement('.jc-capture-lb');
   const captureControlView = new CaptureMouse(controlView);
   let left = sgElemCss(controlView, 'left');
   let top = sgElemCss(controlView, 'top');
@@ -148,9 +145,143 @@ const init= () => {
       })
     });
   };
+  const initCaptureRm = () => {
+    const captureRmElem = new CaptureMouse(rmElem);
+    captureRmElem.captureStateChange(function (playLoad) {
+      const {dx, dy} = playLoad;
+      let curWidth = width + dx;
+      if (curWidth < 24) curWidth = 24;
+      sgElemCss(controlView, {
+        width: `${curWidth}px`
+      });
+    });
+    captureRmElem.captureStateEnd(function () {
+      const {_dx, _dy} = this;
+      width = width + _dx;
+      if (width < 24) width = 24;
+      sgElemCss(controlView, {
+        width: `${width}px`
+      })
+    });
+  };
+  const initCaptureLm = () => {
+    const captureLmElem = new CaptureMouse(lmElem);
+    captureLmElem.captureStateChange(function (playLoad) {
+      const {dx, dy} = playLoad;
+      let curWidth = width - dx;
+      let curLeft = left + dx;
+      if (curWidth < 24) curWidth = 24;
+      sgElemCss(controlView, {
+        width: `${curWidth}px`,
+        left: `${curLeft}px`
+      });
+    });
+    captureLmElem.captureStateEnd(function () {
+      const {_dx, _dy} = this;
+      width = width - _dx;
+      left = left + _dx;
+      if (width < 24) width = 24;
+      sgElemCss(controlView, {
+        width: `${width}px`,
+        left: `${left}px`
+      })
+    });
+  };
+  const initCaptureRt = () => {
+    const captureLmElem = new CaptureMouse(rtElem);
+    captureLmElem.captureStateChange(function (playLoad) {
+      const {dx, dy} = playLoad;
+      let curWidth = width + dx;
+      let curHeight = height - dy;
+      let curTop = top + dy;
+      if (curWidth < 24) curWidth = 24;
+      if (curHeight < 24) curHeight = 24;
+      sgElemCss(controlView, {
+        width: `${curWidth}px`,
+        height: `${curHeight}px`,
+        top: `${curTop}px`
+      });
+    });
+    captureLmElem.captureStateEnd(function () {
+      const {_dx, _dy} = this;
+      width = width + _dx;
+      height = height - _dy;
+      top = top + _dy;
+      if (width < 24) width = 24;
+      if (height < 24) height = 24;
+      sgElemCss(controlView, {
+        width: `${width}px`,
+        height: `${height}px`,
+        top: `${top}px`
+      })
+    });
+  };
+  const initCaptureLb = () => {
+    const captureLbElem = new CaptureMouse(lbElem);
+    captureLbElem.captureStateChange(function (playLoad) {
+      const {dx, dy} = playLoad;
+      let curWidth = width - dx;
+      let curHeight = height + dy;
+      if (curWidth < 24) curWidth = 24;
+      if (curHeight < 24) curHeight = 24;
+      sgElemCss(controlView, {
+        width: `${curWidth}px`,
+        height: `${curHeight}px`,
+      });
+    });
+    captureLbElem.captureStateEnd(function () {
+      const {_dx, _dy} = this;
+      width = width - _dx;
+      height = height + _dy;
+      if (width < 24) width = 24;
+      if (height < 24) height = 24;
+      sgElemCss(controlView, {
+        width: `${width}px`,
+        height: `${height}px`,
+      })
+    });
+  };
+  const initCaptureLt = () => {
+    const captureLtElem = new CaptureMouse(ltElem);
+    captureLtElem.captureStateChange(function (playLoad) {
+      const {dx, dy} = playLoad;
+      let curWidth = width - dx;
+      let curHeight = height - dy;
+      let curTop = top + dy;
+      let curLeft = left + dx;
+      if (curWidth < 24) curWidth = 24;
+      if (curHeight < 24) curHeight = 24;
+      sgElemCss(controlView, {
+        width: `${curWidth}px`,
+        height: `${curHeight}px`,
+        top: `${curTop}px`,
+        left: `${curLeft}px`
+      });
+    });
+    captureLtElem.captureStateEnd(function () {
+      const {_dx, _dy} = this;
+      width = width - _dx;
+      height = height - _dy;
+      top = top + _dy;
+      left = left + _dx;
+      if (width < 24) width = 24;
+      if (height < 24) height = 24;
+      sgElemCss(controlView, {
+        width: `${width}px`,
+        height: `${height}px`,
+        top: `${top}px`,
+        left: `${left}px`
+      })
+    });
+  };
   initCaptureRb();
   initCaptureTm();
   initCaptureBm();
+  initCaptureRm();
+  initCaptureLm();
+  initCaptureRt();
+  initCaptureLb();
+  initCaptureLt();
   intCaptureMainTree();
 }
 init();

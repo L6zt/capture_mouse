@@ -14,6 +14,12 @@ import JcEvent from './common/event';
 const global = window;
 const doc = global.document;
 const body = doc.body;
+/*
+*  _x _y 初始坐标
+* _dx _dy 坐标增量
+*
+*
+*/
 class CaptureMouse{
   constructor (elem, options) {
     this.elem = elem;
