@@ -222,11 +222,13 @@ const init= () => {
       const {dx, dy} = playLoad;
       let curWidth = width - dx;
       let curHeight = height + dy;
+      let curLeft = left + dx;
       if (curWidth < 24) curWidth = 24;
       if (curHeight < 24) curHeight = 24;
       sgElemCss(controlView, {
         width: `${curWidth}px`,
         height: `${curHeight}px`,
+        left: `${curLeft}px`
       });
     });
     captureLbElem.captureStateEnd(function () {
